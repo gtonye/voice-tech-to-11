@@ -1,0 +1,22 @@
+{
+  "name": "vtto-11",
+  "version": "1.0.0",
+  "description": "main script for vtto-11 codebase",
+  "main": "NA",
+  "scripts": {
+    "build": "cd functions && npm install --no-package-lock && cd -",
+    "deploy:only": "firebase deploy --only functions",
+    "deploy": "npm run build && npm run deploy:only"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gtonye/voice-tech-to-11.git"
+  },
+  "author": "gtonye@gmail.com",
+  "license": "MIT",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/gtonye/voice-tech-to-11/issues"
+  },
+  "homepage": "https://github.com/gtonye/voice-tech-to-11#readme"
+}

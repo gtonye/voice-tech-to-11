@@ -1,0 +1,26 @@
+{
+  "name": "action-fulfilment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtonye/voice-tech-to-11.git"
+  },
+  "private": true,
+  "author": "gtonye@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gtonye/voice-tech-to-11/issues"
+  },
+  "homepage": "https://github.com/gtonye/voice-tech-to-11#readme",
+  "dependencies": {
+    "actions-on-google": "2.3.0",
+    "firebase-admin": "6.0.0",
+    "firebase-functions": "2.0.5",
+    "lodash": "4.17.11"
+  }
+}

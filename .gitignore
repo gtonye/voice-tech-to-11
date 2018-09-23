@@ -1,0 +1,16 @@
+# Ignore the files from the repository
+
+# MAC OS
+/**/.DS_Store
+
+# Node
+/**/node_modules/
+/**/package-lock.json
+/**/yarn/lock
+
+# Firebase
+/.firebaserc
+/firebase.json
+
+# IDE
+/**/.idea
