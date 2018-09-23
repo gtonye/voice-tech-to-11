@@ -6,7 +6,7 @@
 # Node
 /**/node_modules/
 /**/package-lock.json
-/**/yarn/lock
+/**/yarn.lock
 
 # Firebase
 /.firebaserc
@@ -14,3 +14,6 @@
 
 # IDE
 /**/.idea
+
+# Configuration
+/functions.env

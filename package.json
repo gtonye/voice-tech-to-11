@@ -5,7 +5,7 @@
   "main": "NA",
   "scripts": {
     "build": "cd functions && npm install --no-package-lock && cd -",
-    "deploy:only": "firebase deploy --only functions",
+    "deploy:only": "sh deploy.sh",
     "deploy": "npm run build && npm run deploy:only"
   },
   "repository": {

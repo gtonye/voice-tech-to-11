@@ -5,6 +5,7 @@
 
 const _ = require('lodash');
 const { Permission } = require('actions-on-google');
+const { getAddressFromLatLon } = require('./helpers');
 
 /**
 * @param {object} conv an Action on Google conversation request.
@@ -22,7 +23,7 @@ const welcomeIntentHandler = (conv) => {
   if (_.isEmpty(userName)) {
     return conv.ask(new Permission({
       'context': 'To retrieve your credit score',
-      'permissions': ['NAME']
+      'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
     }));
   }
 
@@ -61,18 +62,47 @@ const handlePermissionIntentHandler = (conv, params, permissionGranted) => {
   const requestedPermissions = _.get(conv, 'request.user.permissions');
   console.log('requested permissions', _.get(conv, 'request.user'));
 
-  if (requestedPermissions.includes('NAME')) {
+  if (requestedPermissions.includes('NAME') && requestedPermissions.includes('DEVICE_PRECISE_LOCATION')) {
     const userName = _.get(conv, 'user.name.display');
-    _.set(conv, 'user.storage.name', userName);
+    const coordinates = _.get(conv, 'device.location.coordinates', {});
 
-    return conv.ask(`Thank you so much ${userName}, would you like to check your credit score?`)
+    return getAddressFromLatLon(coordinates.latitude, coordinates.longitude)
+      .then((userAddress) => {
+        _.set(conv, 'user.storage.name', userName);
+        _.set(conv, 'user.storage.address', userAddress);
+        _.set(conv, 'user.storage.isFirst', true);
+        return conv.ask(`Thank ${userName} at ${userAddress}, would you like to check your credit score?`);
+      })
+      .catch(() => {
+        conv.close('Unfortunately I will not be able to get your credit score with the name and address specified');
+      });
   }
 
   return conv.close('Unfortunately I will not be able to get your credit score without your name');
 };
 
+/**
+* @param {object} conv an Action on Google conversation request.
+* @return {object} an Action on Google conversation response.
+*
+* Handle when the user says yes after being asked 'do you want to check your credit score'.
+*/
+const welcomeIntentYesFollowUpHandler = (conv) => {
+  // The line below could be replaced with a call to an API
+  // passing conv.user.storage.name and conv.user.storage.address
+  // to retrieve a person credit score.
+  const CREDIT_SCORE_COMMENT = [
+    {'score': 600, 'comment': 'I can help you increase it.'},
+    {'score': 800, 'comment': 'I can help you maintain that high score.'}
+  ];
+
+  const userCreditScore = CREDIT_SCORE_COMMENT[Math.floor(Math.random() * CREDIT_SCORE_COMMENT.length)];
+  return conv.ask(`Your score is ${userCreditScore.score}, ${userCreditScore.comment}. Would you like me to send instruction to your phone?`);
+};
+
 module.exports = {
   'welcomeIntentHandler': welcomeIntentHandler,
   'handlePermissionIntentHandler': handlePermissionIntentHandler,
-  'resetIntentHandler': resetIntentHandler
+  'resetIntentHandler': resetIntentHandler,
+  'welcomeIntentYesFollowUpHandler': welcomeIntentYesFollowUpHandler
 };

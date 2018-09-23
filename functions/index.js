@@ -8,7 +8,8 @@ const functions = require('firebase-functions');
 const {
   welcomeIntentHandler,
   handlePermissionIntentHandler,
-  resetIntentHandler
+  resetIntentHandler,
+  welcomeIntentYesFollowUpHandler
 } = require('./handlers');
 
 const app = dialogflow({debug: true});
@@ -16,5 +17,6 @@ const app = dialogflow({debug: true});
 app.intent('welcomeIntent', welcomeIntentHandler);
 app.intent('permissionYesIntent', handlePermissionIntentHandler);
 app.intent('resetIntent', resetIntentHandler);
+app.intent('welcomeIntentYesFollowUp', welcomeIntentYesFollowUpHandler);
 
 exports.finSmartFunction = functions.https.onRequest(app);
