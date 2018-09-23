@@ -1,10 +1,16 @@
-/**Hold the code for all the handlers.
+/** Hold the code for all the handlers.
 * A handler is a function which take as parameter the dialog flow
 * request, and return an Action On Google compliant response.
 */
 
 const _ = require('lodash');
-const { Permission } = require('actions-on-google');
+const {
+  BasicCard,
+  Button,
+  Image,
+  Permission,
+  SimpleResponse,
+} = require('actions-on-google');
 const { getAddressFromLatLon } = require('./helpers');
 
 /**
@@ -22,15 +28,15 @@ const welcomeIntentHandler = (conv) => {
 
   if (_.isEmpty(userName)) {
     return conv.ask(new Permission({
-      'context': 'To retrieve your credit score',
-      'permissions': ['NAME', 'DEVICE_PRECISE_LOCATION']
+      context: 'To retrieve your credit score',
+      permissions: ['NAME', 'DEVICE_PRECISE_LOCATION'],
     }));
   }
 
   if (isFirstTimeUser) {
-  	_.set(conv, 'user.storage.isFirstTimeUser', false);
+    _.set(conv, 'user.storage.isFirstTimeUser', false);
   } else {
-  	welcomeBackMessage = 'welcome back, '
+    welcomeBackMessage = 'welcome back, ';
   }
 
   return conv.ask(`Hi ${userName}, ${welcomeBackMessage}would you like to check your credit score?`);
@@ -53,7 +59,7 @@ const resetIntentHandler = (conv) => {
  * @param {object} conv the Google conversation object.
  * @param {object} params.
  * @param {boolean} permissionGranted.
- * **/
+ * * */
 const handlePermissionIntentHandler = (conv, params, permissionGranted) => {
   if (!permissionGranted) {
     throw new Error('Permission not granted');
@@ -92,17 +98,48 @@ const welcomeIntentYesFollowUpHandler = (conv) => {
   // passing conv.user.storage.name and conv.user.storage.address
   // to retrieve a person credit score.
   const CREDIT_SCORE_COMMENT = [
-    {'score': 600, 'comment': 'I can help you increase it.'},
-    {'score': 800, 'comment': 'I can help you maintain that high score.'}
+    { score: 600, comment: 'I can help you increase it.' },
+    { score: 800, comment: 'I can help you maintain that high score.' },
   ];
 
-  const userCreditScore = CREDIT_SCORE_COMMENT[Math.floor(Math.random() * CREDIT_SCORE_COMMENT.length)];
+  const userCreditScore = CREDIT_SCORE_COMMENT[
+    Math.floor(Math.random() * CREDIT_SCORE_COMMENT.length)
+  ];
   return conv.ask(`Your score is ${userCreditScore.score}, ${userCreditScore.comment}. Would you like me to send instruction to your phone?`);
 };
 
+const instructionsYesFollowUpHandler = (conv) => {
+  const card = {
+    text: `Stay the course, because your excellent credit means you are headed in the right direction.  \n
+    **Continue paying all your bills on time**. Setting up automated payments can help ensure you never miss a payment.  \n
+    Stay on top of your credit utilization ratio by paying off credit card balances and keeping credit card accounts open,  \n
+    even if you dont use them`,
+    title: 'Keep your score high',
+    buttons: new Button({
+      title: 'Apply for a new credit card',
+      url: 'http://voicetechglobal.com/',
+    }),
+    image: new Image({
+      url: 'https://static.wixstatic.com/media/a2c2a1_7157b6ea1c024eb28ebc6e5b421192b1~mv2.png/v1/fill/w_830,h_252,al_c,usm_0.66_1.00_0.01/a2c2a1_7157b6ea1c024eb28ebc6e5b421192b1~mv2.png',
+      alt: 'Logo Voice tech global',
+    }),
+    display: 'CROPPED',
+  };
+  conv.close(new SimpleResponse({
+    speech: 'I have sent the instructions. Check your score again to see the impact.',
+    text: '. Check your score again to see the impact',
+  }));
+  return conv.close(new BasicCard(card));
+};
+
+
+const instructionsNoFollowUpHandler = conv => conv.close('No problem, talk to me again if you change your mind.');
+
 module.exports = {
-  'welcomeIntentHandler': welcomeIntentHandler,
-  'handlePermissionIntentHandler': handlePermissionIntentHandler,
-  'resetIntentHandler': resetIntentHandler,
-  'welcomeIntentYesFollowUpHandler': welcomeIntentYesFollowUpHandler
+  welcomeIntentHandler,
+  handlePermissionIntentHandler,
+  resetIntentHandler,
+  welcomeIntentYesFollowUpHandler,
+  instructionsYesFollowUpHandler,
+  instructionsNoFollowUpHandler,
 };

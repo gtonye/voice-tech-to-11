@@ -1,4 +1,4 @@
-/** Holds the code for additional computation aside from the 
+/** Holds the code for additional computation aside from the
 * handler itsel.
 */
 
@@ -9,7 +9,7 @@ const functions = require('firebase-functions');
 const config = functions.config();
 
 const GOOGLE_MAPS_API_KEY = _.get(config, 'google_map.api_key');
-if (_.isEmpty(GOOGLE_MAPS_API_KEY )) {
+if (_.isEmpty(GOOGLE_MAPS_API_KEY)) {
   throw new Error('Missing Google Maps API key');
 }
 
@@ -39,5 +39,5 @@ const getAddressFromLatLon = (latitude, longitude) => {
 };
 
 module.exports = {
-  'getAddressFromLatLon': getAddressFromLatLon
+  getAddressFromLatLon,
 };
