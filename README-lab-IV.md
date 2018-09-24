@@ -19,4 +19,9 @@ The code is using node as an example, but many other languages are supported for
 
 # Key concept in this lab
 
-## Node 
+## actions on google SDK for Node
+
+The sdk offers a lot of API to build responses.
+This lab uses the `SimpleResponse` as an example but many other API such as the `BasicCard`, `ssml` can be used.
+
+More information on https://developers.google.com/actions/assistant/responses
