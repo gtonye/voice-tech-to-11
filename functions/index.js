@@ -3,7 +3,7 @@
 * I send as a parameter to the main function exported in this file.
 */
 
-const { dialogflow } = require('actions-on-google');
+const { dialogflow, RegisterUpdate } = require('actions-on-google');
 const functions = require('firebase-functions');
 const {
   welcomeIntentHandler,
@@ -12,6 +12,7 @@ const {
   welcomeIntentYesFollowUpHandler,
   instructionsYesFollowUpHandler,
   instructionsNoFollowUpHandler,
+  finishUpdateSetupHandler,
 } = require('./handlers');
 
 const app = dialogflow({ debug: true });
@@ -22,5 +23,6 @@ app.intent('resetIntent', resetIntentHandler);
 app.intent('welcomeIntentYesFollowUp', welcomeIntentYesFollowUpHandler);
 app.intent('instructionsYesFollowUp', instructionsYesFollowUpHandler);
 app.intent('instructionsNoFollowUp', instructionsNoFollowUpHandler);
+app.intent('finishUpdateSetup', finishUpdateSetupHandler);
 
 exports.finSmartFunction = functions.https.onRequest(app);

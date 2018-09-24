@@ -10,6 +10,7 @@ const {
   Image,
   Permission,
   SimpleResponse,
+  RegisterUpdate
 } = require('actions-on-google');
 const { getAddressFromLatLon } = require('./helpers');
 
@@ -133,7 +134,22 @@ const instructionsYesFollowUpHandler = (conv) => {
 };
 
 
-const instructionsNoFollowUpHandler = conv => conv.close('No problem, talk to me again if you change your mind.');
+const instructionsNoFollowUpHandler = (conv) => {
+  return   conv.ask(new RegisterUpdate({
+    intent: 'scoreUpdate',
+    frequency: 'ROUTINES'
+  }));
+};
+
+const finishUpdateSetupHandler = (conv, params, registered) => {
+  if (registered && registered.status === 'OK') {
+    console.log('registered:', registered)
+    return conv.close("Ok, I'm now part of your routine and will give you update if anything happens!");
+   } else {
+    return conv.close("Ok, I'm not part of your routine.");
+   }
+
+}
 
 module.exports = {
   welcomeIntentHandler,
@@ -142,4 +158,5 @@ module.exports = {
   welcomeIntentYesFollowUpHandler,
   instructionsYesFollowUpHandler,
   instructionsNoFollowUpHandler,
+  finishUpdateSetupHandler
 };
